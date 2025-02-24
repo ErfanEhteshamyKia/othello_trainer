@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Othello Puzzle Trainer</title>
+    <link rel="manifest" href="./manifest.json">
     <style>
         body { 
             font-family: Arial, sans-serif;
@@ -12,8 +13,8 @@
             flex-direction: column;
             align-items: center;
         }
-        .board { display: grid; grid-template-columns: repeat(8, 50px); grid-template-rows: repeat(8, 50px); gap: 2px; width: 420px; }
-        .cell { width: 50px; height: 50px; background-color: green; display: flex; align-items: center; justify-content: center; border-radius: 1px; position: relative; cursor: pointer; }
+        .board { display: grid; grid-template-columns: repeat(8, 40px); grid-template-rows: repeat(8, 40px); gap: 2px; width: 340px; }
+        .cell { width: 40px; height: 40px; background-color: green; display: flex; align-items: center; justify-content: center; border-radius: 1px; position: relative; cursor: pointer; }
         .black, .white { width: 40px; height: 40px; border-radius: 50%; position: absolute; }
         .black { background-color: black; }
         .white { background-color: white; border: 1px solid black; }
@@ -53,7 +54,7 @@
             margin-left: 20px;
         }
         .coordinate-top {
-            width: 52px;
+            width: 42px;
             height: 20px;
             display: flex;
             align-items: center;
@@ -68,7 +69,7 @@
         }
         .coordinate-left {
             width: 20px;
-            height: 52px;
+            height: 42px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -334,6 +335,16 @@
 
         // Load puzzle file from localStorage when the page reloads
         window.onload = loadPuzzleFileFromLocalStorage;
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then((registration) => {
+                    console.log('Service Worker registered with scope: ', registration.scope);
+                })
+                .catch((error) => {
+                    console.log('Service Worker registration failed: ', error);
+                });
+        }
     </script>
 </body>
 </html>
