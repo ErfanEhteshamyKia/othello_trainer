@@ -1,0 +1,16 @@
+{
+    "name": "Othello Middle Game Puzzle Trainer",
+    "short_name": "Othello Trainer",
+    "description": "A puzzle trainer for Othello middle game.",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#4CAF50",
+    "icons": [
+        {
+            "src": "icons/game.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
