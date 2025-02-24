@@ -1,9 +1,9 @@
 const cacheName = 'othello-puzzle-trainer-v1';
 const assetsToCache = [
-    '/',
-    '/index.html',
-    '/manifest.json',
-    '/icons/game.png',
+    './',
+    './index.html',
+    './manifest.json',
+    './icons/game.png',
 ];
 
 self.addEventListener('install', (event) => {
