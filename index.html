@@ -12,24 +12,39 @@
         .black { background-color: black; }
         .white { background-color: white; border: 1px solid black; }
         .counter { margin-bottom: 10px; }
+        .nav-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #3498db;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 5px;
+            text-align: center;
+            text-decoration: none;
+        }
     </style>
-    <link rel="manifest" href="./manifest.json">
 </head>
 <body>
     <h2>Othello Puzzle Trainer</h2>
-    <input type="file" id="fileInput" accept=".txt">
+    <input class="nav-button" type="file" id="fileInput" accept=".txt">
 
-    <button onclick="revealAnswer()">Reveal Answer</button>
-    <button onclick="getMoves()">Get Moves</button>
+    <button class="nav-button" onclick="revealAnswer()">Reveal Answer</button>
+    <button class="nav-button" onclick="getMoves()">Get Moves</button>
     
     <div class="counter" id="counter">Puzzle: 1/1</div>
-    <button onclick="loadPrevPuzzle(10)">&lt;&lt;</button>
-    <button onclick="loadPrevPuzzle()">&lt;</button>
-    <button onclick="loadNextPuzzle()">&gt;</button>
-    <button onclick="loadNextPuzzle(10)">&gt;&gt;</button>
-    <button onclick="moveToFirstUnsolvedPuzzle()">Move to First Unsolved Puzzle</button>
     <p id="feedback"></p>
     <div class="board" id="board"></div>
+    <button class="nav-button" onclick="loadPrevPuzzle(10)">&lt;&lt;</button>
+    <button class="nav-button" onclick="loadPrevPuzzle()">&lt;</button>
+    <button class="nav-button" onclick="loadNextPuzzle()">&gt;</button>
+    <button class="nav-button" onclick="loadNextPuzzle(10)">&gt;&gt;</button>
+    <br><br>
+    <button class="nav-button" onclick="moveToFirstUnsolvedPuzzle()">Move to First Unsolved Puzzle</button>
     
     <script>
         const columns = 'abcdefgh';
@@ -240,17 +255,6 @@
 
         // Load puzzle file from localStorage when the page reloads
         window.onload = loadPuzzleFileFromLocalStorage;
-
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js')
-                .then((registration) => {
-                    console.log('Service Worker registered with scope: ', registration.scope);
-                })
-                .catch((error) => {
-                    console.log('Service Worker registration failed: ', error);
-                });
-        }
     </script>
 </body>
 </html>
