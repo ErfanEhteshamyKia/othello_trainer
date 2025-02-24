@@ -5,20 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Othello Puzzle Trainer</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        .board { display: grid; grid-template-columns: repeat(8, 50px); grid-template-rows: repeat(8, 50px); gap: 2px; margin: 20px auto; width: 420px; }
-        .cell { width: 50px; height: 50px; background-color: green; display: flex; align-items: center; justify-content: center; border-radius: 5px; position: relative; cursor: pointer; }
+        body { 
+            font-family: Arial, sans-serif;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .board { display: grid; grid-template-columns: repeat(8, 50px); grid-template-rows: repeat(8, 50px); gap: 2px; width: 420px; }
+        .cell { width: 50px; height: 50px; background-color: green; display: flex; align-items: center; justify-content: center; border-radius: 1px; position: relative; cursor: pointer; }
         .black, .white { width: 40px; height: 40px; border-radius: 50%; position: absolute; }
         .black { background-color: black; }
         .white { background-color: white; border: 1px solid black; }
-        .counter { margin-bottom: 10px; }
+        .counter { margin-top: 10px; font-size: large; margin-bottom: 10px;}
         .nav-button {
             display: inline-block;
             padding: 10px 20px;
             font-size: 16px;
             font-weight: bold;
             color: #fff;
-            background-color: #3498db;
+            background-color: #000000;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -27,23 +33,94 @@
             text-align: center;
             text-decoration: none;
         }
+        #feedback {
+            font-size: larger;
+        }
+        #board-wrapper {
+            background-color: #000000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-right: 10px;
+            padding-bottom: 16px;
+        }
+        #top-coordination {
+            display: flex;
+            flex-direction: row;
+            color: white;
+            justify-content: space-around;
+            align-items: flex-start;
+            margin-left: 20px;
+        }
+        .coordinate-top {
+            width: 52px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #left-coordination {
+            display: flex;
+            flex-direction: column;
+            color: white;
+            justify-content: center;
+            align-items: center;
+        }
+        .coordinate-left {
+            width: 20px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #left-and-board-wrapper {
+            display: flex;
+            flex-direction: row;
+        }
     </style>
 </head>
 <body>
     <h2>Othello Puzzle Trainer</h2>
     <input class="nav-button" type="file" id="fileInput" accept=".txt">
-
-    <button class="nav-button" onclick="revealAnswer()">Reveal Answer</button>
-    <button class="nav-button" onclick="getMoves()">Get Moves</button>
-    
+    <br>
     <div class="counter" id="counter">Puzzle: 1/1</div>
     <p id="feedback"></p>
-    <div class="board" id="board"></div>
-    <button class="nav-button" onclick="loadPrevPuzzle(10)">&lt;&lt;</button>
-    <button class="nav-button" onclick="loadPrevPuzzle()">&lt;</button>
-    <button class="nav-button" onclick="loadNextPuzzle()">&gt;</button>
-    <button class="nav-button" onclick="loadNextPuzzle(10)">&gt;&gt;</button>
-    <br><br>
+    <div id="board-wrapper">
+        <div id="top-coordination">
+            <div class="coordinate-top">A</div>
+            <div class="coordinate-top">B</div>
+            <div class="coordinate-top">C</div>
+            <div class="coordinate-top">D</div>
+            <div class="coordinate-top">E</div>
+            <div class="coordinate-top">F</div>
+            <div class="coordinate-top">G</div>
+            <div class="coordinate-top">H</div>
+        </div>
+        <div id="left-and-board-wrapper">
+            <div id="left-coordination">
+                <div class="coordinate-left">1</div>
+                <div class="coordinate-left">2</div>
+                <div class="coordinate-left">3</div>
+                <div class="coordinate-left">4</div>
+                <div class="coordinate-left">5</div>
+                <div class="coordinate-left">6</div>
+                <div class="coordinate-left">7</div>
+                <div class="coordinate-left">8</div>
+            </div>
+            <div class="board" id="board"></div>
+        </div>
+    </div>
+    <br>
+    <div>
+        <button class="nav-button" onclick="loadPrevPuzzle(10)">&lt;&lt;</button>
+        <button class="nav-button" onclick="loadPrevPuzzle()">&lt;</button>
+        <button class="nav-button" onclick="loadNextPuzzle()">&gt;</button>
+        <button class="nav-button" onclick="loadNextPuzzle(10)">&gt;&gt;</button>
+    </div>
+    <div>
+        <button class="nav-button" onclick="revealAnswer()">Solution</button>
+        <button class="nav-button" onclick="getMoves()">Get Moves</button>
+    </div>
     <button class="nav-button" onclick="moveToFirstUnsolvedPuzzle()">Move to First Unsolved Puzzle</button>
     
     <script>
@@ -107,7 +184,9 @@
         });
 
         function getMoves() {
-            document.getElementById('feedback').innerText = thisPuzzleMoveSeq;
+            navigator.clipboard.writeText(thisPuzzleMoveSeq);
+            document.getElementById('feedback').innerText = "Copied to clipboard";
+            //document.getElementById('feedback').innerText = thisPuzzleMoveSeq;
         };
 
         function createBoard() {
