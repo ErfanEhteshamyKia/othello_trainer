@@ -78,6 +78,24 @@
             display: flex;
             flex-direction: row;
         }
+        .circle-black {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            border: 2px solid black;
+            background-color: black;
+            vertical-align: -5px;
+        }
+        .circle-white {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            border: 2px solid black;
+            background-color: white;
+            vertical-align: -5px;
+        }
     </style>
 </head>
 <body>
@@ -120,6 +138,7 @@
     </div>
     <div>
         <button class="nav-button" onclick="revealAnswer()">Solution</button>
+        <button class="nav-button" onclick="bookmark()">Bookmark</button>
         <button class="nav-button" onclick="getMoves()">Get Moves</button>
     </div>
     <button class="nav-button" onclick="moveToFirstUnsolvedPuzzle()">Move to First Unsolved Puzzle</button>
@@ -146,6 +165,15 @@
         // Save solved puzzles to localStorage
         function saveSolvedPuzzles(solvedPuzzles) {
             localStorage.setItem('solvedPuzzles', JSON.stringify(solvedPuzzles));
+        }
+
+        function loadBookmarkedPuzzles() {
+            const bookmarked = localStorage.getItem('bookmarkedPuzzles');
+            return bookmarked ? JSON.parse(bookmarked) : [];
+        }
+
+        function saveBookmarkedPuzzles(bookmarkedPuzzles) {
+            localStorage.setItem('bookmarkedPuzzles', JSON.stringify(bookmarkedPuzzles));
         }
 
         // Load the puzzle file from localStorage if it exists
@@ -187,7 +215,6 @@
         function getMoves() {
             navigator.clipboard.writeText(thisPuzzleMoveSeq);
             document.getElementById('feedback').innerText = "Copied to clipboard";
-            //document.getElementById('feedback').innerText = thisPuzzleMoveSeq;
         };
 
         function createBoard() {
@@ -298,7 +325,7 @@
             secondBestMove = puzzleParts.length > 2 ? puzzleParts[2] : null;
 
             let turn = applyMoves(moveSeq);
-            document.getElementById('feedback').innerText = "Select the best move for " + turn;
+            document.getElementById('feedback').innerHTML = "Select the best move for " + (turn == 'black' ? "<div class='circle-black'></div>" : "<div class='circle-white'></div>");
             updateCounter();
         }
 
@@ -319,6 +346,14 @@
 
         function revealAnswer() {
             document.getElementById('feedback').innerText = "Best move: " + topMove;
+        }
+
+        function bookmark() {
+            const bookmarked = loadBookmarkedPuzzles();
+            if (!bookmarked.includes(currentPuzzleIndex)) {
+                bookmarked.push(currentPuzzleIndex);
+                saveBookmarkedPuzzles(bookmarked);
+            }
         }
 
         // Move to the first unsolved puzzle
