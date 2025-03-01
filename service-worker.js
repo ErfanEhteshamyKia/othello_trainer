@@ -4,6 +4,10 @@ const assetsToCache = [
     './index.html',
     './manifest.json',
     './icons/game.png',
+    './puzzles/endgame/easy_endgame.txt',
+    './puzzles/endgame/medium_endgame.txt',
+    './puzzles/endgame/hard_endgame.txt',
+    './puzzles/endgame/very_hard_endgame.txt',
 ];
 
 self.addEventListener('install', (event) => {
