@@ -5,6 +5,7 @@ const assetsToCache = [
     './manifest.json',
     './icons/game.png',
     './style.css',
+    './script.js',
     './puzzles/endgame/easy_endgame.txt',
     './puzzles/endgame/medium_endgame.txt',
     './puzzles/endgame/hard_endgame.txt',
