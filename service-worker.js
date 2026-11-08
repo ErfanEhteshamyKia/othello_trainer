@@ -1,4 +1,4 @@
-const cacheName = 'othello-puzzle-trainer-v1';
+const cacheName = 'othello-puzzle-trainer-v2';
 const assetsToCache = [
     './',
     './index.html',
