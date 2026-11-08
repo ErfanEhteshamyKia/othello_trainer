@@ -5,7 +5,8 @@ const directions = [
     [1, -1], [1, 0], [1, 1]
 ];
 let thisPuzzleMoveSeq;
-let boardState, topMove, secondBestMove;
+let thisPuzzleActualMove;      // the move you played in the real game (the mistake)
+let boardState, topMove;        // topMove = best_move = the correct answer
 let currentTurn = 'black';
 let puzzles = [];
 let currentPuzzleIndex = -1;
@@ -34,7 +35,9 @@ function saveBookmarkedPuzzles(bookmarkedPuzzles) {
 function loadPuzzleFileFromLocalStorage() {
     const puzzleFile = localStorage.getItem('puzzleFile');
     if (puzzleFile) {
-        puzzles = puzzleFile.trim().split('\n');
+        puzzles = puzzleFile.trim().split('\n')
+            .map(l => l.trim())
+            .filter(l => l.length > 0);
         currentPuzzleIndex = -1;
         loadNextPuzzle();
     }
@@ -56,7 +59,9 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
     const reader = new FileReader();
     reader.onload = function(e) {
         const fileContent = e.target.result;
-        puzzles = fileContent.trim().split('\n');
+        puzzles = fileContent.trim().split('\n')
+            .map(l => l.trim())
+            .filter(l => l.length > 0);
         currentPuzzleIndex = -1;
 
         // Save the puzzle file to localStorage
@@ -170,36 +175,53 @@ function loadPrevPuzzle(steps = 1) {
 }
 
 function loadPuzzle() {
-    const puzzleParts = puzzles[currentPuzzleIndex].split(' ');
-    if (puzzleParts.length < 2) return;
+    const puzzleParts = puzzles[currentPuzzleIndex].trim().split(/\s+/);
+    if (puzzleParts.length < 3) {
+        document.getElementById('feedback').innerText =
+            "Invalid puzzle line (expected: puzzle actual_move best_move).";
+        return;
+    }
 
-    const moveSeq = puzzleParts[0];
-    thisPuzzleMoveSeq = moveSeq;
-    topMove = puzzleParts[1];
-    secondBestMove = puzzleParts.length > 2 ? puzzleParts[2] : null;
+    thisPuzzleMoveSeq   = puzzleParts[0];
+    thisPuzzleActualMove = puzzleParts[1];   // move you played in the game
+    topMove             = puzzleParts[2];    // engine's best move = correct answer
 
-    let turn = applyMoves(moveSeq);
-    document.getElementById('feedback').innerHTML = "Select the best move for " + (turn == 'black' ? "<div class='circle-black'></div>" : "<div class='circle-white'></div>");
+    let turn = applyMoves(thisPuzzleMoveSeq);
+    document.getElementById('feedback').innerHTML =
+        "Select the best move for " +
+        (turn == 'black' ? "<div class='circle-black'></div>" : "<div class='circle-white'></div>");
     updateCounter();
 }
 
 function handleMove(row, col) {
     let move = columns[col] + (row + 1);
+
     if (move === topMove) {
         const solvedPuzzles = loadSolvedPuzzles();
-        solvedPuzzles.push(currentPuzzleIndex);  // Mark puzzle as solved
-        saveSolvedPuzzles(solvedPuzzles); // Save to localStorage
-        document.getElementById('feedback').innerText = "Correct!";
-    } else if (move === secondBestMove) {
-        document.getElementById('feedback').innerText = "Good, but not the best move. Try again!";
+        if (!solvedPuzzles.includes(currentPuzzleIndex)) {
+            solvedPuzzles.push(currentPuzzleIndex);
+            saveSolvedPuzzles(solvedPuzzles);
+        }
+        let msg = "Correct!";
+        if (thisPuzzleActualMove && thisPuzzleActualMove !== topMove) {
+            msg += ` (You played ${thisPuzzleActualMove} in the game.)`;
+        }
+        document.getElementById('feedback').innerText = msg;
+    } else if (move === thisPuzzleActualMove) {
+        document.getElementById('feedback').innerText =
+            "That's the move you played. Try to find a better one!";
     } else {
         document.getElementById('feedback').innerText = "Incorrect. Try again!";
     }
-    updateCounter(); // Update the counter after the move
+    updateCounter();
 }
 
 function revealAnswer() {
-    document.getElementById('feedback').innerText = "Best move: " + topMove;
+    let msg = "Best move: " + topMove;
+    if (thisPuzzleActualMove && thisPuzzleActualMove !== topMove) {
+        msg += ` (you played ${thisPuzzleActualMove})`;
+    }
+    document.getElementById('feedback').innerText = msg;
 }
 
 function bookmark() {
